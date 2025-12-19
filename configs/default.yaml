@@ -1,0 +1,56 @@
+dataset:
+  name: cifar100
+  root: ./data
+  batch_size: 128
+  num_workers: 4
+
+model:
+  architecture: resnet18_cifar
+  num_classes: 100
+  num_filters: 64
+  stage_sizes: [2, 2, 2, 2]
+
+training:
+  num_epochs: 200
+  optimizer: adamw
+  lr: 0.1
+  weight_decay: 5e-4
+  lr_schedule: cosine
+  warmup_epochs: 5
+
+mixed_precision:
+  enabled: true
+  loss_scaling: dynamic
+  initial_scale: 32768
+  scale_factor: 2.0
+  scale_window: 2000
+  compute_dtype: float16
+  accumulate_dtype: float32
+  master_weight_dtype: float32
+  fp32_ops:
+    - softmax
+    - cross_entropy
+    - batch_norm
+    - layer_norm
+    - loss_computation
+  fp16_ops:
+    - conv2d
+    - dense_matmul
+    - relu
+
+cutlass:
+  threadblock_shape: [128, 128, 32]
+  warp_shape: [64, 64, 32]
+  instruction_shape: [16, 8, 16]
+  target_arch: sm_80
+  epilogue_fusion: true
+
+benchmark:
+  num_runs: 50
+  warmup_epochs: 5
+  seeds: "range(50)"
+
+augmentation:
+  random_crop: true
+  crop_padding: 4
+  horizontal_flip: true
