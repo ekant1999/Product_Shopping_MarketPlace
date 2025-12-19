@@ -1,0 +1,21 @@
+# Virtual env and build
+venv/
+build/
+*.egg-info/
+*.egg
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Results / logs (optional)
+results/*.json
+*.log
